@@ -51,13 +51,13 @@ if __name__ == "__main__":
 
         try:
             coverURL = currSong["item"]["album"]["images"][SIZES_MAP[SIZE]]["url"]
-            urllib.request.urlretrieve(coverURL, "cover.png")
+            image = urllib.request.urlretrieve(coverURL, "cover.png")
         except:
             print("no playback")
             exit()
 
         if coverURL != None:
-            image = PIL.Image.open("cover.png") ## IMAGE
+            image = PIL.Image.open("cover.png")
             display_image(image)
 
     else:
