@@ -160,4 +160,4 @@ cython_debug/
 #.idea/
 
 # CUSTOM
-/cli-cover/cover.png
+/cli_cover/cover.png
