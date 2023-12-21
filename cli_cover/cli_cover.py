@@ -32,6 +32,7 @@ else:
     print(f"please provide a size \nHINT: size can be one of {SIZES}")
     sys.exit()
 
+
 def display_image(image):
     width, height = image.size
     ascii_image = []
@@ -45,6 +46,7 @@ def display_image(image):
 
     for line in ascii_image:
         print(line)
+
 
 if __name__ == "__main__":
     if SIZE in SIZES:
