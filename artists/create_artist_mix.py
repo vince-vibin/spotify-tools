@@ -1,4 +1,5 @@
 """ create a mix for an artist you want """
+#!/usr/bin/python3
 
 import argparse
 import json
