@@ -1,4 +1,5 @@
 """ Import your Spotify Playlist to GTA V Self Radio"""
+#!/usr/bin/python3
 
 import argparse
 import json
