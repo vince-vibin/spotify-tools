@@ -15,7 +15,7 @@ A script to output the cover of the song you are currently listening to to the c
 
 ## converting
 ### [convert2gta.py](converting/convert2gta.py)
-Here you can download Spotify Playlists to then use them in GTA V Self Radio. Songs are downloaded from YouTube and then moved to the GTA Music Folder.
+Here you can download Spotify Playlists to then use them in GTA V Self Radio. Songs are downloaded from YouTube and then moved to the GTA Music Folder.  
 `usage: import to gta v [-h] playlist_link gta_musicfolder`
 
 
