@@ -24,6 +24,7 @@ def error_handle(exctype, value, tb):
     print("If this keeps happening feel free to open an issue here \n https://github.com/vince-vibin/spotify-tools/issues/new")
 
 sys.excepthook = error_handle
+
 parser = argparse.ArgumentParser(
                     prog="create artist mix",
                     description="Create a Mix for any artist you want",
