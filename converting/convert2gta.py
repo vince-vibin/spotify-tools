@@ -1,9 +1,11 @@
-""" Import your Spotify Playlist to GTA V Self Radio"""
+""" Import your Spotify Playlist to GTA V Self Radio """
 #!/usr/bin/python3
 
 import argparse
 import json
 import os
+import sys
+import traceback
 
 import dotenv
 import pytube
@@ -17,6 +19,15 @@ dotenv.load_dotenv("../.env")
 SCOPE = "playlist-read-private"
 Spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=SCOPE))
 USER = Spotify.current_user()["id"]
+
+def error_handle(exctype, value, tb):
+    tb_str = ''.join(traceback.format_exception(exctype, value, tb))
+    print(tb_str)
+    print("🆘 | Oh no, an error accured \n \
+    Please try using --help an check your arguments \n \
+    If this keeps happening feel free to open an issue here (Make sure to also give the error message) \n https://github.com/vince-vibin/spotify-tools/issues/new")
+
+sys.excepthook = error_handle
 
 parser = argparse.ArgumentParser(
                     prog="import to gta v",
