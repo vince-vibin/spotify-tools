@@ -8,11 +8,9 @@ import sys
 import traceback
 
 import dotenv
-import pytube
 import spotipy
-from moviepy.editor import AudioFileClip
-from mutagen.easyid3 import EasyID3
 from spotipy.oauth2 import SpotifyOAuth
+from pytubefix import YouTube, Search
 
 dotenv.load_dotenv("../.env")
 
@@ -57,7 +55,7 @@ def create_folder():
 
 
 def get_tracks_in_playlist(playlist):
-    print("⚒️  | Getting tracks from Playlist...")
+    print("⚒️ | Getting tracks from Playlist...")
     page = Spotify.playlist_tracks(playlist, limit=100)
     tracks = page['items']
     while page['next']:
@@ -73,35 +71,14 @@ def get_tracks_in_playlist(playlist):
 
 def yt_download(title):
     search = f"{title[0]} {title[1]}"
-    filename = f"{title[0].replace('.', '')}.webm".replace(':', '')
-    s = pytube.Search(search)
-    video = s.results[0]
-    for stream in video.streams.filter(only_audio=True):
-        if stream.abr == "70kbps" and stream.mime_type == "audio/webm":
-            print(f"🔍 | Matching Stream found, downloading {search} now...")
-            stream.download(output_path=f"{args.gta_musicfolder}{playlist['name']}/", filename=filename)
-            convert_file(title[0], title[1], filename)
-        else:
-            print("🥲  | Matching Stream found but Bitrate or Audio Stream not matching")
-
-
-def convert_file(songname, artist, filename):
-    print("🔃 | Converting file and adding metadata...")
-    filename_mp3 = filename.split(".webm")[0] + ".mp3"
-    metadata ={
-        'artist': artist,
-        'title': songname,
-    }
-    webm = AudioFileClip(filename)
-    webm.write_audiofile(filename_mp3, codec="libmp3lame")
-    os.remove(filename)
-    # add metadata
-    audio = EasyID3(filename_mp3)
-    for key, value in metadata.items():
-        audio[key] = value
-    audio.save()
-    print(f"🥳 | Successfully downloaded and converted {songname} by {artist}")
-
+    s = Search(search)
+    if len(s.videos) > 0:
+        url = s.videos[0].watch_url
+        video = YouTube(url).streams.get_audio_only()
+        print(f"🔍 | Matching Stream found, downloading {search} now...")
+        video.download(mp3=True, filename_prefix=args.gta_musicfolder, filename=f"{search}")
+    else:
+        print("🥲 | Matching stream for {search} not found.")
 
 if __name__ == "__main__":
     create_folder()
