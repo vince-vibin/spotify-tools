@@ -94,13 +94,13 @@ def add2playlist(playlist, tracks):
 if __name__ == "__main__":
     artist_name = artist["name"]
     if args.name is None:
-        playlist_name = f"{artist_name} Mix"
+        PLAYLIST_NAME = f"{artist_name} Mix"
     else:
-        playlist_name = args.name
+        PLAYLIST_NAME = args.name
 
-    print(f"🫡  | Creating Mix for artist {artist_name} as {playlist_name}...")
+    print(f"🫡  | Creating Mix for artist {artist_name} as {PLAYLIST_NAME}...")
     playlist = Spotify.user_playlist_create(user=USER,
-                                name=playlist_name,
+                                name=PLAYLIST_NAME,
                                 public=True,
                                 collaborative=False,
                                 description="Custom Artist mix created using a script")
