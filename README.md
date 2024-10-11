@@ -14,14 +14,18 @@ Here you can create a mix for an artist. This could be usefull if you want to do
 A script to output the cover of the song you are currently listening to to the cli as ascii art. This could be usefull if you want to use it in something like neofetch.
 
 ## converting
+
 ### [convert2gta.py](converting/convert2gta.py)
 Here you can download Spotify Playlists to then use them in GTA V Self Radio. Songs are downloaded from YouTube and then moved to the GTA Music Folder.  
 `usage: import to gta v [-h] playlist_link gta_musicfolder`
 
+### [convert2mp3.py](converting/convert2mp3.py)
+Here you can download Songs from your Spotify Playlist. Songs are downloaded from YouTube.  
+`usage: Convert to mp3 [-h] playlist_link musicfolder`
 
 # Script Ideas
 - [x] Album Cover Poster Generator
 - [x] Convert Spotify Playlist to GTA V Radio
-- [ ] Convert Spotify Playlist to Soundcloud
-- [ ] Convert Spotify Playlist to Youtube Playlist
-- [ ] Convert Spotify Playlist to MP3
+- [x] Convert Spotify Playlist to MP3
+- [ ] Convert Spotify Playlist to Soundcloud (API currently not usable)
+- [ ] Convert Spotify Playlist to Youtube Playlist (Costs money :/)

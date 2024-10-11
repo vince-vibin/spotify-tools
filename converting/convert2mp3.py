@@ -1,4 +1,4 @@
-""" Import your Spotify Playlist to GTA V Self Radio """
+""" Convert your Spotify Playlist to local MP3s """
 #!/usr/bin/python3
 
 import argparse
@@ -10,6 +10,7 @@ import traceback
 import dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
+
 from pytubefix import YouTube, Search
 
 dotenv.load_dotenv("../.env")
@@ -28,34 +29,34 @@ def error_handle(exctype, value, tb):
 sys.excepthook = error_handle
 
 parser = argparse.ArgumentParser(
-                    prog="import to gta v",
-                    description="Import your Spotify Playlist to GTA V",
+                    prog="Convert to mp3",
+                    description="Convert your Spotify Playlist to local MP3s",
                     epilog='For a full documentation check out the ReadMe')
 parser.add_argument("playlist_link",
                     help="The link to the playlist you want to convert")
-parser.add_argument("gta_musicfolder",
-                    help="The full path to your GTA Music Folder (usually something like C:/Users/<USERNAME>/OneDrive/Dokumente/Rockstar Games/GTA V/User Music)")
+parser.add_argument("musicfolder",
+                    help="The full path to your Music Folder (something like C:/Users/<USERNAME>/Music/my-playlist/)")
 args = parser.parse_args()
 
 playlist = json.dumps(Spotify.playlist(args.playlist_link))
 playlist = json.loads(playlist)
 
-if not args.gta_musicfolder.endswith("/"):
-    args.gta_musicfolder = args.gta_musicfolder + "/"
+if not args.musicfolder.endswith("/"):
+    args.musicfolder = args.musicfolder + "/"
 
 def create_folder():
-    if os.path.exists(f"{args.gta_musicfolder}{playlist['name']}/"):
-        os.chdir(f"{args.gta_musicfolder}{playlist['name']}/")
-    elif os.path.exists(f"{args.gta_musicfolder}/"):
-        os.chdir(f"{args.gta_musicfolder}/")
+    if os.path.exists(f"{args.musicfolder}{playlist['name']}/"):
+        os.chdir(f"{args.musicfolder}{playlist['name']}/")
+    elif os.path.exists(f"{args.musicfolder}/"):
+        os.chdir(f"{args.musicfolder}/")
         os.mkdir(playlist['name'])
         os.chdir(playlist['name'])
     else:
-        print("🥲 | Given GTA Music Path not found")
+        print("🥲 | Given Music Path not found")
 
 
 def get_tracks_in_playlist(playlist):
-    print("⚒️ | Getting tracks from Playlist...")
+    print("⚒️  | Getting tracks from Playlist...")
     page = Spotify.playlist_tracks(playlist, limit=100)
     tracks = page['items']
     while page['next']:
@@ -72,19 +73,15 @@ def get_tracks_in_playlist(playlist):
 def yt_download(title):
     search = f"{title[0]} {title[1]}"
     s = Search(search)
-    if len(s.videos) > 0:
-        url = s.videos[0].watch_url
-        video = YouTube(url).streams.get_audio_only()
-        print(f"🔍 | Matching Stream found, downloading {search} now...")
-        video.download(mp3=True, filename_prefix=args.gta_musicfolder, filename=f"{search}")
-    else:
-        print("🥲 | Matching stream for {search} not found.")
+    url = s.videos[0].watch_url
+    video = YouTube(url).streams.get_audio_only()
+    print(f"🔍 | Matching Stream found, downloading {search} now...")
+    video.download(mp3=True, filename_prefix=args.musicfolder, filename=f"{search}")
+
 
 if __name__ == "__main__":
     create_folder()
     track_titles = get_tracks_in_playlist(playlist["id"])
     for track in track_titles:
         yt_download(track)
-    print(f"✅ | Finished! Checkout the files at {args.gta_musicfolder} \n \
-    For a guide on how to enable Self Radio in GTA V checkout: \n \
-        https://www.rockstargames.com/newswire/article/25o2411812a799/self-radio-create-your-own-custom-radio-station-in-gtav-pc")
+    print(f"✅ | Finished! Checkout the files at {args.musicfolder}")
