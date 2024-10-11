@@ -29,7 +29,7 @@ def error_handle(exctype, value, tb):
 sys.excepthook = error_handle
 
 parser = argparse.ArgumentParser(
-                    prog="Convert to gta v",
+                    prog="Convert to mp3",
                     description="Convert your Spotify Playlist to local MP3s",
                     epilog='For a full documentation check out the ReadMe')
 parser.add_argument("playlist_link",
