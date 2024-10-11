@@ -22,6 +22,6 @@ Here you can download Spotify Playlists to then use them in GTA V Self Radio. So
 # Script Ideas
 - [x] Album Cover Poster Generator
 - [x] Convert Spotify Playlist to GTA V Radio
-- [ ] Convert Spotify Playlist to Soundcloud
-- [ ] Convert Spotify Playlist to Youtube Playlist
-- [ ] Convert Spotify Playlist to MP3
+- [x] Convert Spotify Playlist to MP3
+- [ ] Convert Spotify Playlist to Soundcloud (API currently not usable)
+- [ ] Convert Spotify Playlist to Youtube Playlist (Costs money :/)
