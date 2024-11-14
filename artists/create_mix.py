@@ -1,7 +1,6 @@
 """ create a mix for an artist you want """
 #!/usr/bin/python3
 
-import argparse
 import json
 import sys
 import traceback
@@ -10,11 +9,14 @@ import dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
 
+import models.artist_mix
+
 dotenv.load_dotenv("../.env")
 
 SCOPE = "playlist-modify-public"
 Spotify = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=SCOPE))
 USER = Spotify.current_user()["id"]
+ArtistMix = models.artist_mix.ArtistMix
 
 def error_handle(exctype, value, tb):
     tb_str = ''.join(traceback.format_exception(exctype, value, tb))
@@ -25,26 +27,7 @@ def error_handle(exctype, value, tb):
 
 sys.excepthook = error_handle
 
-parser = argparse.ArgumentParser(
-                    prog="create artist mix",
-                    description="Create a Mix for any artist you want",
-                    epilog='For a full documentation check out the ReadMe')
-parser.add_argument("artist_link",
-                    help="The link to the profile of the artist you want to create a mix for")
-parser.add_argument("--name",
-                    help="The name of the mix playlist")
-parser.add_argument("--size",
-                    help="The number of songs in the mix (default is all songs)",
-                    default="all")
-parser.add_argument("--mode",
-                    help="The mode of the mix",
-                    default="none")
-args = parser.parse_args()
-
-artist = json.dumps(Spotify.artist(args.artist_link))
-artist = json.loads(artist)
-
-def get_tracks():
+def get_tracks(artist: dict):
     tracks = []
 
     # get albums
@@ -80,7 +63,8 @@ def get_tracks():
 
     return tracks
 
-def add2playlist(playlist, tracks):
+
+def add2playlist(playlist: str, tracks: list):
     # You can add a maximum of 100 tracks per request.
     if len(tracks) > 100:
         while len(tracks) > 100:
@@ -91,23 +75,29 @@ def add2playlist(playlist, tracks):
         return
     Spotify.user_playlist_add_tracks(USER, playlist, tracks)
 
-if __name__ == "__main__":
-    artist_name = artist["name"]
-    if args.name is None:
-        PLAYLIST_NAME = f"{artist_name} Mix"
-    else:
-        PLAYLIST_NAME = args.name
 
-    print(f"🫡  | Creating Mix for artist {artist_name} as {PLAYLIST_NAME}...")
+def create(artist_mix: ArtistMix) -> None:
+    artist = json.dumps(Spotify.artist(artist_mix.artist_link))
+    artist = json.loads(artist)
+
+    artist_name = artist["name"]
+    if artist_mix.playlist_name is None:
+        playlist_name = f"{artist_name} Mix"
+    else:
+        playlist_name = artist_mix.playlist_name
+
+    print(f"🫡  | Creating Mix for artist {artist_name} as {playlist_name}...")
     playlist = Spotify.user_playlist_create(user=USER,
-                                name=PLAYLIST_NAME,
+                                name=playlist_name,
                                 public=True,
                                 collaborative=False,
-                                description="Custom Artist mix created using a script")
+                                description=artist_mix.playlist_description)
 
-    tracks = get_tracks()
+    tracks = get_tracks(artist)
     add2playlist(playlist["id"], tracks)
 
     print(f"🎵 | {len(tracks)} Songs added.")
     print(f"✅ | Playlist created at https://open.spotify.com/playlist/{playlist['id']}")
     print("🙂 | Have Fun!")
+
+    return {"message": f"https://open.spotify.com/playlist/{playlist['id']}"}
